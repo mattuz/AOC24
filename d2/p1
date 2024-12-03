@@ -1,0 +1,33 @@
+from pathlib import Path
+
+p = Path(__file__).with_name("input.txt")
+with p.open("r") as f:
+    lines = f.readlines()
+
+def is_safe():
+    sum = 0
+    for line in lines:
+        test = line.split(" ")
+        nlist = []
+        ok = True
+        for num in test:
+            nlist.append(int(num))
+        prev = -1
+        for num in nlist:
+            if prev == -1:
+                prev = num
+                continue
+            else:
+                comp = abs(num-prev)
+                prev = num
+            if comp >3 or comp <1:
+                ok = False
+        if ok == True:
+            sum += 1
+    return sum
+            
+        
+
+
+if __name__ == "__main__":
+    print(is_safe())
