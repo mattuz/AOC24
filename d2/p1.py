@@ -12,15 +12,23 @@ def is_safe():
         ok = True
         for num in test:
             nlist.append(int(num))
-        prev = -1
+        first = True
+        prev = 0
+        positive = False
+        negative = False
         for num in nlist:
-            if prev == -1:
+            if first:
+                first = False
                 prev = num
                 continue
-            else:
-                comp = abs(num-prev)
+            else:   
+                comp = num-prev
+                if comp >0:
+                    positive = True
+                else:
+                    negative = True
                 prev = num
-            if comp >3 or comp <1:
+            if not (-3 <= comp <= -1 or 1 <= comp <= 3) or (positive and negative):
                 ok = False
         if ok == True:
             sum += 1
