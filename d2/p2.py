@@ -7,17 +7,13 @@ with p.open("r") as f:
 def is_safe():
     sum = 0
     for line in lines:
-        test = line.split(" ")
-        nlist = []
+        nlist = list(map(int, line.split()))
         ok = True
-        for num in test:
-            nlist.append(int(num))
         first = True
         prev = 0
         positive = False
         negative = False
-        saved = 0
-        print("checking: ", nlist)
+        comp = 0
         for index, num in enumerate(nlist):
             if first:
                 first = False
@@ -32,14 +28,12 @@ def is_safe():
                 prev = num
             if not (-3 <= comp <= -1 or 1 <= comp <= 3) or (positive and negative):
                 ok = problem_dampener(nlist, index)
-                if ok:
-                    print("saved!")
-                    saved += 1
-                    if saved > 1:
-                        ok = False
-        if ok == True:
+                #if ok:
+                break
+                    
+        if ok:
             sum += 1
-            print("Was ok! Total is now: ", sum)
+            
     return sum
             
 def problem_dampener(list, index):

@@ -1,77 +1,43 @@
 from pathlib import Path
 
+# Read input from a file
 p = Path(__file__).with_name("input.txt")
 with p.open("r") as f:
     lines = f.readlines()
 
 def is_safe():
-    sum = 0
+    total_safe = 0
+
     for line in lines:
-        test = line.split(" ")
-        nlist = []
-        for num in test:
-            nlist.append(int(num))
-        ok = True
-        first = True
-        prev = 0
-        positive = False
-        negative = False
-        for num in nlist:
-            if first:
-                first = False
-                prev = num
-                continue
-            else:   
-                comp = num-prev
-                if comp > 0:
-                    positive = True
-                elif comp < 0:
-                    negative = True
-                prev = num
-            if not (-3 <= comp <= -1 or 1 <= comp <= 3) or (positive and negative):
-                ok = False
-        if ok == True:
-            sum += 1
-        else:
-            if dampener(nlist):
-                sum += 1
-    return sum
-            
-def dampener(mylist):
-    saved = 0
-    for index, number in enumerate(mylist):
-        clist = mylist.copy()
-        del clist[index]
+        levels = list(map(int, line.split()))
+        if is_sequence_safe(levels) or can_remove_one_for_safety(levels):
+            total_safe += 1
 
-        ok = True
-        first = True
-        prev = 0
-        positive = False
-        negative = False
-        for num in clist:
-            if first:
-                first = False
-                prev = num
-                continue
-            else:   
-                comp = num-prev
-                if comp > 0:
-                    positive = True
-                elif comp < 0:
-                    negative = True
-                
-                prev = num
-            if not (-3 <= comp <= -1 or 1 <= comp <= 3) or (positive and negative):
-                ok = False
-        if ok == True:
-            saved += 1
-    if saved == 1:
-        print("SAVED!!! ", mylist)
-        return True
-    else:
-        return False
+    return total_safe
 
+def is_sequence_safe(levels):
+    """Check if a sequence is safe without modifications."""
+    positive = False
+    negative = False
 
+    for i in range(1, len(levels)):
+        diff = levels[i] - levels[i - 1]
+        if not (-3 <= diff <= -1 or 1 <= diff <= 3):
+            return False
+        if diff > 0:
+            positive = True
+        if diff < 0:
+            negative = True
+
+    return not (positive and negative)
+
+def can_remove_one_for_safety(levels):
+    """Check if removing one level makes the sequence safe."""
+    for i in range(len(levels)):
+        modified = levels[:i] + levels[i + 1:]
+        if is_sequence_safe(modified):
+            return True
+    return False
 
 if __name__ == "__main__":
     print(is_safe())
