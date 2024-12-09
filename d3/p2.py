@@ -8,19 +8,20 @@ with p.open("r") as f:
 
 def multiply():
     pattern = r"mul\((\d+),(\d+)\)|(do\(\))|(don't\(\))"
+
     product = 0
     res  = []
     cdo = 0
     for line in lines:
         matches = re.findall(pattern, line)
-    for match in matches:
-        if match[0] and match[1]:
-            res.append((int(match[0]), int(match[1])))
-        elif match[2]:
-            cdo +=1
-            res.append("do")
-        elif match[3]:
-            res.append("don't")
+        for match in matches:
+            if match[0] and match[1]:
+                res.append((int(match[0]), int(match[1])))
+            elif match[2]:
+                cdo +=1
+                res.append("do")
+            elif match[3]:
+                res.append("don't")
     do = True
     for item in res:
         if item == "do":
